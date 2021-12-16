@@ -14,7 +14,8 @@ PortMapIO *button_SH;
 PortMapIO *button_SCK;
 PortMapIO *button_MISO;
 	
-	
+TIMER *timer;	
+
 uint8_t digitOut[6];//индикаторы на выход
 uint8_t flagTimerLed = 0;
 
@@ -23,6 +24,7 @@ uint32_t  timeout = 0xfffff; // Счетчик времени ожидания
  while( timeout-- ) { };
   RCC rcc(80);
   pause = new DELAY;
+timer = new TIMER(MDR_TIMER1, 1000);
 }
 
 /**/
@@ -110,10 +112,10 @@ spi->transmit(&tmp);
 /**/
 void writeLed(uint8_t ledNumber){
 	
-//uint16_t tmp = digitOut[ledNumber];//	(1 << ledNumber);
-//tmp <<= 8;
-//tmp |= (1 << ledNumber);	
-uint16_t tmp = 0xAAAA;	
+uint16_t tmp = digitOut[ledNumber];//	(1 << ledNumber);
+tmp <<= 8;
+tmp |= (1 << ledNumber);	
+//uint16_t tmp = 0xAAAA;	
 spi->transmit(&tmp);//Просунули данные в регистры
 	//Дрыгнули ногой для записи
 	cs->setHigh();

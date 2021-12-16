@@ -269,7 +269,7 @@ void WWDG_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIMER1_IRQHandler(void)//Timer1_IRQHandler
+void Timer1_IRQHandler(void)//Timer1_IRQHandler
 {
 	static uint8_t cnt = 0;
 	if(TIMER_GetITStatus(MDR_TIMER1,TIMER_STATUS_CNT_ARR) == 1){

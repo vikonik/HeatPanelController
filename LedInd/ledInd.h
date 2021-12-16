@@ -6,7 +6,7 @@
 #include "port.h"
 //#define NUM_OF_DIGIT	6//количество индикаторов
 
-//#define CATODE //для индикаторов с общим катодом
+#define CATODE //для индикаторов с общим катодом
 
 
 //индикатор с общим катодом
@@ -20,31 +20,40 @@
 //#define SEG_F	PORT_Pin_5//(1<<PD5)
 //#define SEG_G	PORT_Pin_6//(1<<PD6)
 
-//#ifdef CATODE
-//	#define DIG_0		SEG_A + SEG_B + SEG_C + SEG_D + SEG_E + SEG_F
-//	#define DIG_1		SEG_B + SEG_C
-//	#define DIG_2		SEG_A + SEG_B + SEG_D + SEG_E + SEG_G
-//	#define DIG_3		SEG_A + SEG_B + SEG_C + SEG_D +  SEG_G
-//	#define DIG_4		SEG_B + SEG_C + SEG_F + SEG_G
-//	#define DIG_5		SEG_A + SEG_C + SEG_D + SEG_F + SEG_G
-//	#define DIG_6		SEG_A + SEG_C + SEG_D + SEG_E + SEG_F + SEG_G
-//	#define DIG_7		SEG_A + SEG_B +SEG_C 
-//	#define DIG_8		SEG_A + SEG_B +SEG_C + SEG_D + SEG_E + SEG_F + SEG_G
-//	#define DIG_9		SEG_A + SEG_B +SEG_C + SEG_D + SEG_F + SEG_G
-//	#define PROBEL 	0
-//	#else
-//	#define DIG_0		!(SEG_A + SEG_B + SEG_C + SEG_D + SEG_E + SEG_F)
-//	#define DIG_1		!(SEG_B + SEG_C)
-//	#define DIG_2		!(SEG_A + SEG_B + SEG_D + SEG_E + SEG_G)
-//	#define DIG_3		!(SEG_A + SEG_B + SEG_C + SEG_D +  SEG_G)
-//	#define DIG_4		!(SEG_B + SEG_C + SEG_F + SEG_G)
-//	#define DIG_5		!(SEG_A + SEG_C + SEG_D + SEG_F + SEG_G)
-//	#define DIG_6		!(SEG_A + SEG_C + SEG_D + SEG_E + SEG_F + SEG_G)
-//	#define DIG_7		!(SEG_A + SEG_B +SEG_C)
-//	#define DIG_8		!(SEG_A + SEG_B +SEG_C + SEG_D + SEG_E + SEG_F + SEG_G)
-//	#define DIG_9		!(SEG_A + SEG_B +SEG_C + SEG_D + SEG_F + SEG_G)
-//	#define PROBEL 	!0
-//#endif
+
+#define SEG_A	(1<<0)
+#define SEG_B	(1<<1)
+#define SEG_C	(1<<2)
+#define SEG_D	(1<<3)
+#define SEG_E	(1<<4)
+#define SEG_F	(1<<5)
+#define SEG_G	(1<<6)
+
+#ifdef CATODE
+	#define DIG_0		SEG_A + SEG_B + SEG_C + SEG_D + SEG_E + SEG_F
+	#define DIG_1		SEG_B + SEG_C
+	#define DIG_2		SEG_A + SEG_B + SEG_D + SEG_E + SEG_G
+	#define DIG_3		SEG_A + SEG_B + SEG_C + SEG_D +  SEG_G
+	#define DIG_4		SEG_B + SEG_C + SEG_F + SEG_G
+	#define DIG_5		SEG_A + SEG_C + SEG_D + SEG_F + SEG_G
+	#define DIG_6		SEG_A + SEG_C + SEG_D + SEG_E + SEG_F + SEG_G
+	#define DIG_7		SEG_A + SEG_B +SEG_C 
+	#define DIG_8		SEG_A + SEG_B +SEG_C + SEG_D + SEG_E + SEG_F + SEG_G
+	#define DIG_9		SEG_A + SEG_B +SEG_C + SEG_D + SEG_F + SEG_G
+	#define PROBEL 	0
+	#else
+	#define DIG_0		!(SEG_A + SEG_B + SEG_C + SEG_D + SEG_E + SEG_F)
+	#define DIG_1		!(SEG_B + SEG_C)
+	#define DIG_2		!(SEG_A + SEG_B + SEG_D + SEG_E + SEG_G)
+	#define DIG_3		!(SEG_A + SEG_B + SEG_C + SEG_D +  SEG_G)
+	#define DIG_4		!(SEG_B + SEG_C + SEG_F + SEG_G)
+	#define DIG_5		!(SEG_A + SEG_C + SEG_D + SEG_F + SEG_G)
+	#define DIG_6		!(SEG_A + SEG_C + SEG_D + SEG_E + SEG_F + SEG_G)
+	#define DIG_7		!(SEG_A + SEG_B +SEG_C)
+	#define DIG_8		!(SEG_A + SEG_B +SEG_C + SEG_D + SEG_E + SEG_F + SEG_G)
+	#define DIG_9		!(SEG_A + SEG_B +SEG_C + SEG_D + SEG_F + SEG_G)
+	#define PROBEL 	!0
+#endif
 
 ////#define LED_CATODE_DDR 		DDRB
 //#define LED_CATODE_PORT 	MDR_PORTB
@@ -102,7 +111,7 @@
 //	DIG_9
 //};
 
-
+extern uint8_t myDigit[];
 /**********************************************************************/
 class LED_CODE{
 	public:

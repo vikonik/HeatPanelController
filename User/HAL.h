@@ -17,7 +17,7 @@
 #include "spi.h" 
 //#include "FIFO.h" 
 #include "timer.h" 
-
+#include "ledind.h"
 
 extern PortMapIO *heat[6];
 extern UART *uart;
@@ -27,6 +27,8 @@ extern uint8_t digitOut[6];
 
 extern 	PortMapIO *cs; 
 	
+extern TIMER *timer;
+
 void initMCU(void);
 void initRelay(void);
 void initUart(void);
