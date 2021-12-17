@@ -15,46 +15,54 @@ PortMapIO *button_SCK;
 PortMapIO *button_MISO;
 	
 TIMER *timer;	
+TIMER *timerHeat;	
+
+UART *uart;
 
 uint8_t digitOut[6];//индикаторы на выход
 uint8_t flagTimerLed = 0;
+
+
+uint8_t button[9];
+uint8_t heater[5];//Мощность нагрева каждой канфорки
 
 void initMCU(void){
 uint32_t  timeout = 0xfffff; // Счетчик времени ожидания
  while( timeout-- ) { };
   RCC rcc(80);
   pause = new DELAY;
-timer = new TIMER(MDR_TIMER1, 1000);
+  timer = new TIMER(MDR_TIMER1, 1000);
+  timerHeat = new TIMER(MDR_TIMER2, 5000000);
 }
 
 /**/
 void initUart(void){
-//  PortMapIO rx(MDR_PORTD,
-//    PORT_Pin_0,
-//    PORT_OE_IN,
-//    PORT_PULL_UP_OFF,
-//    PORT_PULL_DOWN_OFF,
-//    PORT_PD_SHM_OFF,
-//    PORT_PD_DRIVER,
-//    PORT_GFEN_OFF,
-//    PORT_FUNC_ALTER,
-//    PORT_SPEED_MAXFAST,
-//    PORT_MODE_DIGITAL);
+  PortMapIO rx(MDR_PORTD,
+    PORT_Pin_0,
+    PORT_OE_IN,
+    PORT_PULL_UP_OFF,
+    PORT_PULL_DOWN_OFF,
+    PORT_PD_SHM_OFF,
+    PORT_PD_DRIVER,
+    PORT_GFEN_OFF,
+    PORT_FUNC_ALTER,
+    PORT_SPEED_MAXFAST,
+    PORT_MODE_DIGITAL);
 
-//  PortMapIO tx(MDR_PORTD,
-//    PORT_Pin_1,
-//    PORT_OE_OUT,
-//    PORT_PULL_UP_OFF,
-//    PORT_PULL_DOWN_OFF,
-//    PORT_PD_SHM_OFF,
-//    PORT_PD_DRIVER,
-//    PORT_GFEN_OFF,
-//    PORT_FUNC_ALTER,
-//    PORT_SPEED_MAXFAST,
-//    PORT_MODE_DIGITAL);
+  PortMapIO tx(MDR_PORTD,
+    PORT_Pin_1,
+    PORT_OE_OUT,
+    PORT_PULL_UP_OFF,
+    PORT_PULL_DOWN_OFF,
+    PORT_PD_SHM_OFF,
+    PORT_PD_DRIVER,
+    PORT_GFEN_OFF,
+    PORT_FUNC_ALTER,
+    PORT_SPEED_MAXFAST,
+    PORT_MODE_DIGITAL);
 
-//   uart = new UART(MDR_UART2, 115200, UART_WordLength8b, UART_StopBits1, UART_Parity_No,UART_FIFO_OFF, UART_HardwareFlowControl_RXE | UART_HardwareFlowControl_TXE);
-//uart->enableIRQ();
+   uart = new UART(MDR_UART2, 115200, UART_WordLength8b, UART_StopBits1, UART_Parity_No,UART_FIFO_OFF, UART_HardwareFlowControl_RXE | UART_HardwareFlowControl_TXE);
+uart->enableIRQ();
 }
 
 /*
@@ -164,36 +172,44 @@ button_SCK->setPinAsOutput();
 	 button_SH->setHigh();	 
 	 button_SCK->setHigh();
 }
+
+/*
+Оправшиваем микросхему
+*/
+uint8_t getHC165(void){
+	button_SCK->setHigh();
+	button_SH->setLow();
+	button_SH->setHigh();	
+
+	uint8_t tmp = 0;
+  for(int i = 0; i<8; i++){
+      button_SCK->setHigh();
+      button_SCK->setLow();
+      if(button_MISO->PortMapIoPORT_Read() & 0x08)
+        tmp |=(1 << (7-i));
+  } 
+return tmp;
+}
 /*
 Читаем кнопки
-uint8_t *digit[] - индикатлор для каждой кнопки
+возращаем номер нажатой кнопки
 */
-void readButton(uint8_t *digit){
+uint8_t readButton(void){
+  uint8_t tmp1 = getHC165();
+  pause->delay_ms(20);
+  uint8_t tmp2 = getHC165();
+  if(tmp1 != tmp2) return 255;
 
-	button_SCK->setHigh();
-	
-	button_SH->setLow();
-//	button_SCK->setHigh();
-//	button_SCK->setLow();
+if(tmp1 == 0)return 255;
+if(tmp1 == 1)return 1;
+if(tmp1 == 2)return 2;
+if(tmp1 == 4)return 3; 
+if(tmp1 == 8)return 4; 
+if(tmp1 == 16)return 5; 
+if(tmp1 == 32)return 6; 
+if(tmp1 == 64)return 7; 
+if(tmp1 == 128)return 8; 
 
-	  button_SH->setHigh();	
-	
-//	button_SCK->setHigh();
-//	button_SCK->setLow();	
-
-	uint16_t tmp = 0;
-for(int i = 0; i<8; i++){
-		button_SCK->setHigh();
-		button_SCK->setLow();
-	if(button_MISO->PortMapIoPORT_Read() & 0x08)
-tmp |=(1 << (7-i));
-} 
-	
-//	button_SCK->setPinAsAlternative(1,1);	
-	
-//	  uint16_t tmp = 0xFFFF;
-//	tmp = button_MISO->PortMapIoPORT_Read();
-//		tmp =	button_spi->transmit(&tmp);
- 		tmp = tmp;
+return 255;
 }
 

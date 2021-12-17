@@ -3,8 +3,8 @@
 */
 #include "ledind.h"
 //массив с цифрами
-uint8_t myDigit[11]={
-	DIG_0,
+uint8_t myDigit[10]={
+PROBEL,
 	DIG_1,
 	DIG_2,
 	DIG_3,
@@ -14,7 +14,7 @@ uint8_t myDigit[11]={
 	DIG_7,
 	DIG_8,
 	DIG_9,
-PROBEL
+
 };
 /***********************************************************************/
 LED_CODE::LED_CODE(){

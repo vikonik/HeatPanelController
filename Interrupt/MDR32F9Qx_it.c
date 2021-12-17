@@ -289,6 +289,43 @@ void Timer1_IRQHandler(void)//Timer1_IRQHandler
 *******************************************************************************/
 void Timer2_IRQHandler(void)
 {
+  static uint8_t cnt = 0;
+uint8_t tmp = 0;
+	if(TIMER_GetITStatus(MDR_TIMER2,TIMER_STATUS_CNT_ARR) == 1){
+		TIMER_ClearITPendingBit(MDR_TIMER2, TIMER_STATUS_CNT_ARR);
+
+    cnt %= 10;
+digitOut[3] = myDigit[cnt];
+    if(cnt != 0){
+        if(heater[1] >= cnt) 
+uart->sendByte(0x11);
+else 
+uart->sendByte(0x10);
+        if(heater[2] >= cnt) 
+uart->sendByte(0x21);
+else 
+uart->sendByte(0x20);
+        if(heater[3] >= cnt) 
+uart->sendByte(0x31);
+else 
+uart->sendByte(0x30);
+        if(heater[4] >= cnt) 
+uart->sendByte(0x41);
+else 
+uart->sendByte(0x40);
+    }
+else{
+      uart->sendByte(0x10);
+      uart->sendByte(0x20);
+      uart->sendByte(0x30);
+      uart->sendByte(0x40);
+}
+
+//if(cnt % 2)uart->sendByte(0x51);
+//else uart->sendByte(0x50);
+
+    cnt++;
+}
 }
 /*******************************************************************************
 * Function Name  : Timer3_IRQHandler

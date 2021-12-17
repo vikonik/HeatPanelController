@@ -28,6 +28,8 @@ extern uint8_t digitOut[6];
 extern 	PortMapIO *cs; 
 	
 extern TIMER *timer;
+extern uint8_t button[];
+extern uint8_t heater[];
 
 void initMCU(void);
 void initRelay(void);
@@ -36,7 +38,7 @@ void initLed(void);
 void writeLed(uint8_t ledNumber, uint8_t *digit[]);
 void writeLed(uint8_t ledNumber);
 void initButton();
-void readButton(uint8_t *digit);
+uint8_t readButton(void);
 
 
 #endif
